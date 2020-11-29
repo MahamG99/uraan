@@ -16,10 +16,13 @@ Sign Up
 {% endif %}
 
 {% if form %}
-<form action="{{url_for('signup')}}" method="POST" style="padding:5px;">
+<form action="{{url_for('signup')}}"  method="POST" style="padding:5px;">
+    <div class="form_basic">
     <!-- Full Name Field -->
+    <div class ="required">
     {{ form.first_name.label }}: <br>
-    {{ form.first_name }} 
+    {{ form.first_name }}
+    </div>
     <br>
     {% if form.first_name.errors %}
         {% for error in form.first_name.errors %}
@@ -28,8 +31,10 @@ Sign Up
         {% endfor %}
     {% endif %}
 
+    <div class="required">
     {{ form.last_name.label }}: <br>
     {{ form.last_name }} 
+    </div>
     <br>
     {% if form.last_name.errors %}
         {% for error in form.last_name.errors %}
@@ -39,8 +44,10 @@ Sign Up
     {% endif %}
 
     <!-- Email Field -->
+    <div class="required">
     {{ form.email.label }}: <br>
-    {{ form.email }} 
+    {{ form.email }}
+    </div> 
     <br>
     {% if form.email.errors %}
         {% for error in form.email.errors %}
@@ -50,8 +57,10 @@ Sign Up
     {% endif %}
 
     <!-- Password Field -->
+    <div class="required">
     {{ form.password.label }}: <br>
     {{ form.password }}
+    </div>
     <br>
     {% if form.password.errors %}
         {% for error in form.password.errors %}
@@ -61,8 +70,10 @@ Sign Up
     {% endif %}
 
     <!-- Confirm Password Field -->
+    <div class="required">
     {{ form.confirm_password.label }}: <br>
     {{ form.confirm_password }}
+    </div>
     <br>
     {% if form.confirm_password.errors %}
         {% for error in form.confirm_password.errors %}
@@ -72,8 +83,10 @@ Sign Up
     {% endif %}
 
     <!-- Gender Field -->
+    <div class="required">
     {{ form.gender.label }}: <br>
     {{ form.gender }}
+    </div>
     <br>
     {% if form.gender.errors %}
         {% for error in form.gender.errors %}
@@ -83,8 +96,10 @@ Sign Up
     {% endif %}
 
     <!-- Nationality Field -->
+    <div class="required">
     {{ form.nationality.label }}: <br>
     {{ form.nationality }}
+    </div>
     <br>
     {% if form.nationality.errors %}
         {% for error in form.nationality.errors %}
@@ -94,8 +109,10 @@ Sign Up
     {% endif %}
 
     <!-- Passport Number Field -->
+    <div class="required">
     {{ form.passport_number.label }}: <br>
     {{ form.passport_number }}
+    </div>
     <br>
     {% if form.passport_number.errors %}
         {% for error in form.passport_number.errors %}
@@ -105,8 +122,10 @@ Sign Up
     {% endif %}
 
     <!-- Phone Number Field -->
+    <div class="required">
     {{ form.phone_number.label }}: <br>
     {{ form.phone_number }}
+    </div>
     <br>
     {% if form.phone_number.errors %}
         {% for error in form.phone_number.errors %}
@@ -116,8 +135,10 @@ Sign Up
     {% endif %}
 
     <!-- Age Field -->
+    <div class="required">
     {{ form.age.label }}: <br>
     {{ form.age }}
+    </div>
     <br>
     {% if form.age.errors %}
         {% for error in form.age.errors %}
@@ -127,8 +148,10 @@ Sign Up
     {% endif %}
 
     <!-- Account number Field -->
+    <div class="required">
     {{ form.account_no.label }}: <br>
     {{ form.account_no }}
+    </div>
     <br>
     {% if form.account_no.errors %}
         {% for error in form.account_no.errors %}
@@ -137,9 +160,11 @@ Sign Up
         {% endfor %}
     {% endif %}
 
-      
+    <div class="submit">
     {{ form.csrf_token }}
     {{ form.submit }}
+    </div>
+</div>
 </form> 
 {% endif %}
 {% endblock %}

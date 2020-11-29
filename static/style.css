@@ -14,3 +14,93 @@ th, td {
     padding: 8px;
     border-bottom: 1px solid #ddd;
 }
+
+
+.button {
+    background-color: #424874;
+    border: none;
+    width: 30%;
+    color: white;
+    padding: 15px 32px;
+    margin-left: 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+  }
+.press {
+    background-color: #EEEEEE;
+    padding: 8px 20px;
+    text-decoration:none;
+    font-weight:normal;
+    border-radius:4px;
+    color:  #424874;
+    cursor:pointer;
+}
+
+.press2 {
+    background-color: #424874;
+    color: #FFFFFF;
+}
+
+.press2:hover {
+    background-color:black;
+    color: #FFFFFF;
+}
+
+.required{
+  width: 100%;
+  padding: 4px 10px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+.required:focus {
+  border: 3px solid #424874;
+}
+
+.required:after {
+    color: #e32;
+    content: ' *';
+}
+.formval{
+  width: 100%;
+  padding: 4px 10px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+.submit{
+  background-color: #424874; 
+  border: none;
+  padding: 4px 10px;
+  margin: 8px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-style: bold;
+
+}
+.text{
+  padding: 4px 10px;
+  margin: 8px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  letter-spacing: 0px;
+  word-spacing: 1px;
+  color: #220F6B;
+  font-weight: 400;
+  text-decoration: none solid rgb(68, 68, 68);
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+}
+
+

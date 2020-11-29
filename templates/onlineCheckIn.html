@@ -1,0 +1,184 @@
+{% extends "LoggedInBase.html" %}
+
+{% block title %}
+Online Check-In
+{% endblock %}
+
+{% block heading %}
+Online Check-In
+{% endblock %}
+
+
+{% block content %}
+
+{% if message %}
+    {{ message }}
+{% endif %}
+
+{% if form %}
+<form action="{{url_for('onlineCheckIn')}}" class="form-inline" method="POST" style="padding:5px;">
+    <!-- Full Name Field -->
+    <div class="required">
+    {{ form.booking_id.label }}: <br>
+    {{ form.booking_id }}
+</div>
+    <br>
+    {% if form.booking_id.errors %}
+        {% for error in form.booking_id.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.num_passengers.label }}: <br>
+    {{ form.num_passengers}}
+    </div>
+    <br>
+    {% if form.num_passengers.errors %}
+        {% for error in form.num_passengers.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Passenger names -->
+
+    <div class="formval">
+    {{ form.passenger_name1.label }}: <br>
+    {{ form.passenger_name1 }}
+    </div>
+    
+    <br>
+    {% if form.passenger_name1.errors %}
+        {% for error in form.passenger_name1.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+<!-- Passenger names -->
+    <div class="formval">
+    {{ form.passenger_name2.label }}: <br>
+    {{ form.passenger_name2 }}
+    </div>
+    
+    <br>
+    {% if form.passenger_name2.errors %}
+        {% for error in form.passenger_name2.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+<!-- Passenger names -->
+    <div class="formval">
+    {{ form.passenger_name3.label }}: <br>
+    {{ form.passenger_name3 }}
+    </div>
+    
+    <br>
+    {% if form.passenger_name3.errors %}
+        {% for error in form.passenger_name3.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+    <!-- Passenger names -->
+    <div class="formval">
+    {{ form.passenger_name4.label }}: <br>
+    {{ form.passenger_name4 }}
+    </div>
+    
+    <br>
+    {% if form.passenger_name4.errors %}
+        {% for error in form.passenger_name4.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+    <!-- Passenger names -->
+
+    <div class="formval">
+    {{ form.passenger_name5.label }}: <br>
+    {{ form.passenger_name5}}
+    </div>
+    
+    <br>
+    {% if form.passenger_name5.errors %}
+        {% for error in form.passenger_name5.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+    <!-- Passenger names -->
+    <div class="formval">
+    {{ form.passenger_name6.label }}: <br>
+    {{ form.passenger_name6 }}
+    </div>
+    
+    <br>
+    {% if form.passenger_name6.errors %}
+        {% for error in form.passenger_name6.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+    <!-- Passenger names -->
+    <div class="formval">
+    {{ form.passenger_name7.label }}: <br>
+    {{ form.passenger_name7 }}
+    </div>
+    
+    <br>
+    {% if form.passenger_name7.errors %}
+        {% for error in form.passenger_name7.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+    <!-- Passenger names -->
+    <div class="formval">
+    {{ form.passenger_name8.label }}: <br>
+    {{ form.passenger_name8 }}
+    </div>
+    
+    <br>
+    {% if form.passenger_name8.errors %}
+        {% for error in form.passenger_name8.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+    <!-- Passenger names -->
+    <div class="formval">
+    {{ form.passenger_name9.label }}: <br>
+    {{ form.passenger_name9 }}
+    </div>
+    
+    <br>
+    {% if form.passenger_name9.errors %}
+        {% for error in form.passenger_name9.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+    <div class="formval">
+    {{ form.passenger_name10.label }}: <br>
+    {{ form.passenger_name10 }}
+    </div>
+    
+    <br>
+    {% if form.passenger_name10.errors %}
+        {% for error in form.passenger_name10.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="submit">
+    {{ form.csrf_token }}
+    {{ form.submit }}
+</div>
+</form> 
+{% endif %}
+{% endblock %}

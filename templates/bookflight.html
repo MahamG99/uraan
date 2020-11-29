@@ -1,0 +1,93 @@
+{% extends "LoggedInBase.html" %}
+
+
+
+{% block heading %}
+<h1>Booking Flight, {{session['flight']}} </h1>
+{% endblock %}
+
+{% block content %}
+{% if message %}
+    {{ message }}
+{% endif %}
+
+
+{% if form %}
+<form action="{{url_for('bookflight', flight_no = session['flight'], travel_class=session['travel_class'])}}" method="POST" style="padding:5px;">
+    <!-- Full Name Field -->
+    {{ form.first_name.label }}: <br>
+    {{ form.first_name }} 
+    <br>
+    {% if form.first_name.errors %}
+        {% for error in form.first_name.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    {{ form.last_name.label }}: <br>
+    {{ form.last_name }} 
+    <br>
+    {% if form.last_name.errors %}
+        {% for error in form.last_name.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+
+    <!-- Gender Field -->
+    {{ form.gender.label }}: <br>
+    {{ form.gender }}
+    <br>
+    {% if form.gender.errors %}
+        {% for error in form.gender.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Nationality Field -->
+    {{ form.nationality.label }}: <br>
+    {{ form.nationality }}
+    <br>
+    {% if form.nationality.errors %}
+        {% for error in form.nationality.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Passport Number Field -->
+    {{ form.passport_number.label }}: <br>
+    {{ form.passport_number }}
+    <br>
+    {% if form.passport_number.errors %}
+        {% for error in form.passport_number.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Age Field -->
+    {{ form.age.label }}: <br>
+    {{ form.age }}
+    <br>
+    {% if form.age.errors %}
+        {% for error in form.age.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+      
+    {{ form.csrf_token }}
+    {{ form.submit }}
+</form>
+{% endif %}
+
+
+
+
+
+{% endblock %}

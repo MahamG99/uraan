@@ -1,0 +1,145 @@
+{% extends "LoggedInBase.html" %}
+
+{% block heading %}
+<h1>Please Enter Details for Desired Flight, {{session['fname']}} {{session['lname']}}</h1>
+{% endblock %}
+
+{% block content %}
+{% if message %}
+    {{ message }}
+{% endif %}
+
+ 
+{% if form %}
+<form action="{{url_for('searchflights')}}" method="POST" display="inline-block">
+    <div class="form_basic">
+    <!--Departure  Field -->
+    <div class="required">
+    {{ form.dep.label }}: <br>
+  
+    {{ form.dep }}
+    </div>
+    <br>
+    {% if form.dep.errors %}
+        {% for error in form.dep.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <!--arrival  Field -->
+    <div class="required">
+    {{ form.arr.label }}: <br>
+     
+    {{ form.arr }} 
+    </div>
+    <br>
+    {% if form.arr.errors %}
+        {% for error in form.arr.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <!--Departure  Field -->
+    <div class="required">
+    {{ form.dep_time.label }}: <br>
+    {{ form.dep_time }} 
+    </div>
+    <br>
+    {% if form.dep_time.errors %}
+        {% for error in form.dep_time.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+
+    <!-- travel field -->
+    <div class="required">
+    {{ form.travel_class.label }}: <br>
+  
+    {{ form.travel_class}}
+    </div>
+    <br>
+    {% if form.travel_class.errors %}
+        {% for error in form.travel_class.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Password Field -->
+    <div class="required">
+    {{ form.num_passengers.label }}: <br>
+
+    {{ form.num_passengers}}
+    </div>
+    <br>
+    {% if form.num_passengers.errors %}
+        {% for error in form.num_passengers.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+     <div class="required">
+    {{ form.search_filter.label }}: <br>
+
+    {{ form.search_filter}}
+    </div>
+    <br>
+    {% if form.search_filter.errors %}
+        {% for error in form.search_filter.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="submit">
+    {{ form.csrf_token }}
+    {{ form.submit }}
+    </div>
+</div>
+  
+</form> 
+{% endif %}
+
+{% if display %}
+<table>
+<tr>
+    <th></th>
+    <th>Airline Name</th>  
+    <th>Flight Number</th>
+    <th>Departure(PKST)</th>
+    <th>Arrival(PKST)</th>
+    <th>Departure Time</th>
+    <th>Arrival Time</th>
+    <th>Travel Class</th>
+    <th>Plane Type</th>
+    <th>Price(PKR)</th>
+</tr>
+{% for flight in display %}
+<tr >
+    <td>
+        <!-- <a href = "{{url_for('bookflight', flight_no=flight[0], travel_class=flight[8])}}"> -->
+            <a href = "/bookflight/{{ flight[0] }}/{{ flight[8] }}">
+            <img src= "{{url_for('static', filename=flight[5]|string+".png" )}}" height="100" >
+        </a>
+    </td>
+    <td>{{ flight[5] }}</td>
+    <td>{{ flight[0] }}</td>
+    <td>{{ flight[1] }}</td>
+    <td>{{ flight[2] }}</td>
+    <td>{{ flight[3] }}</td>
+    <td>{{ flight[4] }}</td>
+    <td>{{ flight[8] }}</td>
+    <td>{{ flight[6] }}</td>
+    <td>{{ flight[10] }}</td>
+    
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+
+{% endblock %}
