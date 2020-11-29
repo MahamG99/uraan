@@ -7,3 +7,39 @@ Uraan
 {% block heading %}
 <h1>Welcome, {{fname}} {{lname}}</h1>
 {% endblock %}
+
+{% block content %}
+<div class="text">
+{% if display %}
+	{% for i in display[0] %}
+ 		Checked-In: {{i}} <br>
+	{% endfor %}
+	{% for i in display[1] %}
+ 		Already Checked-in: {{i}} <br>
+	{% endfor %}
+	{% for i in display[2] %}
+ 		Invalid Passeger: {{i}} <br>
+	{% endfor %}
+</div>
+
+{% endif %}
+
+{% if message %}
+    {{ message }}
+{% endif %}
+<br><br>
+
+<input class="button" type="button" onclick="location.href='/searchflights';" value="Search Flights" /></button>
+<br><br><br>
+<input class="button" type="button" onclick="location.href='/';" value="Cancel Flight" /></button>
+<br><br><br>
+<input class="button" type="button" onclick="location.href='/';" value="Update Booking" /></button>
+<br><br><br>
+<input class="button" type="button" onclick="location.href='/onlineCheckIn';" value="Online CheckIn" /></button>
+<br><br><br>
+<input class="button" type="button" onclick="location.href='/';" value="Flight Status" /></button>
+<br><br><br>
+<input class="button" type="button" onclick="location.href='/';" value="Check Points" /></button>
+
+
+{% endblock %}

@@ -17,9 +17,12 @@ Customer Log-In
 
 {% if form %}
 <form action="{{url_for('customerlogin')}}" method="POST" style="padding:5px;">
+    <div class="form_basic">
     <!-- Full Name Field -->
+    <div class="form_basic">
     {{ form.email.label }}: <br>
     {{ form.email }} 
+</div>
     <br>
     {% if form.email.errors %}
         {% for error in form.email.errors %}
@@ -30,8 +33,10 @@ Customer Log-In
 
 
     <!-- Password Field -->
+    <div class="form_basic">
     {{ form.password.label }}: <br>
     {{ form.password }}
+</div>
     <br>
     {% if form.password.errors %}
         {% for error in form.password.errors %}
@@ -40,8 +45,11 @@ Customer Log-In
         {% endfor %}
     {% endif %}
 
+    <div class="submit">
     {{ form.csrf_token }}
     {{ form.submit }}
+    </div>
+</div>
 </form> 
 {% endif %}
 {% endblock %}

@@ -1,0 +1,65 @@
+{% extends "LoggedInBase.html" %}
+
+{% block title %}
+Online Flight Payment
+{% endblock %}
+
+{% block heading %}
+Online Flight Payment
+{% endblock %}
+
+
+{% block content %}
+
+{% if message %}
+    {{ message }}
+{% endif %}
+
+{% if form %}
+<form action="{{url_for('onlinePayment')}}" class="form-inline" method="POST" style="padding:5px;">
+    <!-- Full Name Field -->
+    <div class="required">
+    {{ form.booking_id.label }}: <br>
+    {{ form.booking_id }}
+</div>
+    <br>
+    {% if form.booking_id.errors %}
+        {% for error in form.booking_id.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.account_no.label }}: <br>
+    {{ form.account_no }}
+</div>
+</div>
+    <br>
+    {% if form.account_no.errors %}
+        {% for error in form.account_no.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Password Field -->
+    <div class="required">
+    {{ form.security_key.label }}: <br>
+    {{ form.security_key }}
+</div>
+    <br>
+    {% if form.security_key.errors %}
+        {% for error in form.security_key.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="submit">
+    {{ form.csrf_token }}
+    {{ form.submit }}
+</div>
+</form> 
+{% endif %}
+{% endblock %}
