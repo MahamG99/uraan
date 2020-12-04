@@ -5,7 +5,7 @@ import yaml
 import datetime
 import itertools
 import random 
-book_iter = 0
+# book_iter = 0
 class Booking:
     def __init__(self, full_name, nationality, gender, passport_number, age):
         self.full_name = full_name
@@ -42,6 +42,10 @@ def homepage():
 @app.route('/customer')
 def customer():
     return render_template("customer.html", fname=session['fname'], lname=session['lname'])
+
+@app.route('/agent')
+def agent():
+    return render_template("agents.html", fname=session['fname'], lname=session['lname'], userid=session['userid'], airlinen = session["airline_name"])
 
 @app.route('/signup' ,methods=['GET', 'POST'])
 def signup():
@@ -92,6 +96,7 @@ def customerlogin():
         cur.close()
     else:
         return render_template("customerlogin.html", form=form)
+
 @app.route('/agentlogin' ,methods=['GET', 'POST'])
 def agentlogin():
     form = forms.LoginForm()
@@ -100,22 +105,26 @@ def agentlogin():
         email = form.email.data
         cur = mysql.connection.cursor()
 
-        value = cur.execute("SELECT first_name, last_name from agents where password = %s and email = %s", (password,email))
+        value = cur.execute("SELECT first_name, last_name, agent_id,airline_name from agents where password = %s and email = %s", (password,email))
         
         if value >0:
-            details = cur.fetchone() 
-            return render_template("agents.html" ,fname=details[0], lname=details[1])
+            details = cur.fetchone()
+            mysql.connection.commit()
+            cur.close()
+            session["userid"] = details[2]
+            session["airline_name"] = details[3]
+            session["fname"] = details[0]
+            session["lname"] = details[1]
+            return render_template("agents.html" ,fname=details[0], lname=details[1], userid=details[2], airlinen =details[3])
         else:
-            return "Invalid Login"
-        mysql.connection.commit()
-        cur.close()
+            return render_template("agentlogin.html" ,form=form, message="Invalid Login")
     else:
         return render_template("agentlogin.html", form=form)
 
 @app.route('/searchflights', methods = ['GET', 'POST'] )
 def searchflights():
-    global book_iter
-    book_iter = 0
+    # global book_iter
+    session["book_iter"] = 0
     form = forms.SearchFlightsForm()
     check = True
     while (check == True):
@@ -189,38 +198,185 @@ def searchflights():
 
 @app.route('/bookflight/<int:flight_no>/<string:travel_class>', methods = ['GET', 'POST'] )
 def bookflight(flight_no, travel_class):
-    global book_iter
+    # global book_iter
     print("I am herrrrrreeeee")
-    session["flight"] = flight_no
-    session["travel_class"] = travel_class
+    if session["book_iter"] ==0:
+        session["travel_class"] = travel_class
+        session["flight"] = flight_no
     num_pass = int(session['num_pass'])
-    print(num_pass)
-    print("KHABEES", session['travel_class'])
-    book_iter = book_iter + 1 
-    print("HI", book_iter)
+    session["book_iter"] = session["book_iter"] + 1 
    
-    if book_iter != (num_pass + 1):
+    if session["book_iter"] != (num_pass + 1):
         form = forms.BookFlightsForm()
         if form.validate_on_submit():
             fname = form.first_name.data
             lname = form.last_name.data
-            name = fname + lname
+            name = fname +" "+ lname
             nationality = form.nationality.data
             passport_number = form.passport_number.data
             age = form.age.data
-
-            print("bye", book_iter)
-            if book_iter == (num_pass):
-                return render_template("home.html")
+            gender = form.gender.data
+            pass_dict = {}
+            pass_dict["name"] = name
+            pass_dict["nationality"] = nationality
+            pass_dict["age"] = age
+            pass_dict["gender"] = gender
+            pass_dict["passport_number"] = passport_number
+            pass_dict["customer_id"] = session["userid"]
+            pass_dict["travel_class"] = travel_class
+            pass_dict["flight_no"] = flight_no
+            session["booking"].append(pass_dict)
+            if session["book_iter"] == (num_pass):
+                return render_template('confirmbooking.html')
         else:
-            msg = "Please enter detail of Passenger " + str(book_iter)
-            book_iter = book_iter - 1
+            msg = "Please enter detail of Passenger " + str(session["book_iter"])
+            session["book_iter"] = session["book_iter"] - 1
             return render_template("bookflight.html", form = form, message = msg)
     else:
-        return render_template("home.html")
+        return render_template('confirmbooking.html')
     return redirect("url_for('bookflight', flight_no = session['flight'], travel_class=session['travel_class'])")
 
+@app.route('/confirmbooking', methods = ['GET', 'POST'] )
+def confirmbooking():
+    print("HI1")
+    check = False
+    for i in range(len(session["booking"])):
+        print("HI2")
+        for j in range(i+1,len(session["booking"])):
+            if (session["booking"][i]["name"] == session["booking"][j]["name"]) or session["booking"][i]["passport_number"] == session["booking"][j]["passport_number"]:
+                return render_template("confirmbooking.html", message = "Booking Information of two Passengers Matches")
 
+    for people in session["booking"]:
+        cur = mysql.connection.cursor()
+        value = cur.execute("SELECT * from bookings where passport_number = %s and flight_number = %s", (people["passport_number"], people["flight_no"]))
+        if value > 0:
+            # detail = cur.fetchall()
+            cur.close()
+            return render_template("confirmbooking.html", message = "Booking for Some Passenger Already Made")
+        else:
+            cur.close()
+
+    
+    '''CHANGE IT INTO AFTER ONLINE PAYMENT'''
+    
+    for people in session["booking"]:
+        print("HI3")
+        check = True
+        cur = mysql.connection.cursor()
+        print("HEYYYY",session['travel_class'], "BYE")
+        cur.execute("INSERT INTO bookings( booking_id, flight_number, passenger_name, customer_id, checkin_status, travel_class, passport_number, gender, nationality, age) VALUES (%s, %s, %s,%s, %s, %s, %s, %s, %s, %s)",
+                                            ( session["booking_id"], people["flight_no"], people["name"], people["customer_id"], "0", session["travel_class"], people["passport_number"], people["gender"], people["nationality"] ,people["age"] ) )
+        mysql.connection.commit()
+        cur.close()
+    
+    if check == True:
+        return render_template("home.html")
+
+
+    return render_template("confirmbooking.html")
+
+
+@app.route('/flightstatus', methods = ['GET', 'POST'])
+def flightstatus():
+    form = forms.FlightStatusForm()
+    if form.validate_on_submit():
+        flight_no = form.flight_no.data
+        curr_date = datetime.date.today()
+        cur = mysql.connection.cursor()
+        value = cur.execute('SELECT * from Flights WHERE Flight_Number=%s',(flight_no,))
+        if value > 0:
+            detail = cur.fetchone()
+            mysql.connection.commit()
+            dep_time = detail[3].date()
+            if dep_time < curr_date:
+                cur.close()
+                return render_template("flightstatus.html", form=form, message = 'Enter Flight Number of Active Flights')                
+               
+            else:
+                cur.close()
+                return render_template("flightstatus.html", form=form, display = detail)
+        else:
+            return render_template("flightstatus.html", form=form, message = "Enter Valid Flight Number")
+    else:
+        return render_template("flightstatus.html", form=form)
+
+    
+@app.route('/onlinePayment', methods=['GET','POST'])
+def onlinePayment():
+    form = forms.onlinePayment()
+    if form.validate_on_submit():
+        booking_id = form.booking_id.data
+        account_no = form.account_no.data
+        security_key = form.security_key.data
+        cur = mysql.connection.cursor()
+
+        value = cur.execute("SELECT account_balance, expiry_date from bank where account_number = %s and Security_Key = %s", (account_no, int(security_key)))
+        if value > 0:
+            details = cur.fetchone()
+            mysql.connection.commit()
+            user_balance = int(details[0])
+            expiry_date = details[1]
+            today = datetime.date.today() ############################3 check if this works, comparing card expiry date
+            if today > expiry_date: #deletes booking for all passengers associated with that bookingID
+                cur.execute("DELETE FROM Bookings where Booking_ID = %s and customer_id=%s", (booking_id, session['userid']))
+                mysql.connection.commit()
+                return render_template("customer.html", fname=session['fname'],lname=session['lname'], message= "YOUR CARD IS EXPIRED. YOUR BOOKING HAS BEEN REMOVED")
+            else:
+                value = cur.execute("SELECT price, flight_number from Bookings where Booking_ID = %s", (booking_id,)) ####### needs editing based on number of tickets
+                if value > 0:
+                    details = cur.fetchall()
+                    details = list(details)
+                    # print("DETAILS:", details)
+                    mysql.connection.commit()
+                    price = 0
+                    for x in details:
+                        price += x[0]
+
+                    flight_no = details[0][1]
+                    # print("flight", flight_no)
+                    # print("total amount", price)
+                    if user_balance < price: #cannot perform transaction
+                        cur.execute("DELETE from Bookings where Booking_ID = %s and customer_id=%s", (booking_id, session['userid']))
+                        mysql.connection.commit()
+                        return render_template("customer.html", fname=session['fname'],lname=session['lname'], message="NOT ENOUGH FUNDS FOR TRANSACTION. YOUR BOOKING HAS BEEN REMOVED")
+                    else:
+                        value = cur.execute("SELECT airline_name from flights where flight_number = %s", (flight_no,))
+                        
+                        if value > 0:
+                            details = cur.fetchone()
+                            mysql.connection.commit()
+                            airline_n = details[0]
+                            value = cur.execute("SELECT account_number from airline where airline_name = %s", (airline_n,))
+                            if value > 0:
+                                details = cur.fetchone()
+                                mysql.connection.commit()
+                                airline_account = details[0] #get airline account number
+                                value = cur.execute("SELECT account_balance from bank where account_number = %s", (airline_account,))
+                                if value > 0:
+                                    details = cur.fetchone()
+                                    mysql.connection.commit()
+                                    airline_balance = int(details[0])
+                                    airline_balance += price
+                                    user_balance = user_balance - price
+                                    cur.execute("UPDATE bank SET account_balance = %s where account_number = %s", (user_balance, account_no))
+                                    mysql.connection.commit()
+                                    cur.execute("UPDATE bank SET account_balance = %s where account_number = %s", (airline_balance, airline_account))
+                                    mysql.connection.commit()
+                                    cur.close()
+                                    #add payment_complete
+                                    return render_template("customer.html", fname=session['fname'],lname=session['lname'], message="PAYMENT COMPLETE")
+                                else:
+                                    return "bank does not have this account"
+                            else:
+                                return "airline does not have bank account number stored"
+                        else:
+                            return render_template("customer.html", fname=session['fname'],lname=session['lname'], message="Invalid flight")
+                else:
+                    return render_template("onlinePayment.html",form=form, message="No Matching Booking Found. Please Try Again")
+        else:
+            return render_template("onlinePayment.html", form=form, message="invalid credentials. Please try again")
+    else:
+        return render_template("onlinePayment.html", form=form)
 
 @app.route('/onlineCheckIn', methods=['GET','POST'])
 def onlineCheckIn():
@@ -243,7 +399,8 @@ def onlineCheckIn():
         pass_name.append(form.passenger_name10.data)
 
         cur = mysql.connection.cursor()
-        value = cur.execute("SELECT flight_number from bookings where booking_id = %s", (booking_id))
+     
+        value = cur.execute("SELECT flight_number from bookings where booking_id = %s and customer_id=%s", (booking_id, session['userid']))
         if value >0:
             detail = cur.fetchall()
             flight = detail[0]
@@ -312,10 +469,140 @@ def onlineCheckIn():
             else:
                 render_template("customer.html", fname=session['fname'], lname=session['lname'], message="FLIGHT NOT FOUND")
         else:
-            return render_template("customer.html", fname=session['fname'], lname=session['lname'], message="FLIGHT NOT FOUND")
+            return render_template("customer.html", fname=session['fname'], lname=session['lname'], message="BOOKING NOT FOUND")
     else:
         return render_template("onlineCheckIn.html", form=form)
 
+@app.route('/cancelFlight', methods=['GET','POST'])
+def cancelFlight():
+    form = forms.cancelFlight()
+    if form.validate_on_submit():
+        flight_no = form.flight_number.data
+        departure = form.departure.data
+        arrival = form.arrival.data
+        agent = session["userid"]
+
+        cur = mysql.connection.cursor()
+        value = cur.execute("SELECT airline_name from agents where Agent_id = %s", (agent,))
+        if value > 0:
+            details = cur.fetchone()
+            mysql.connection.commit()
+            airline = details[0]
+            print("AIRLINE", airline)
+            print("flight_no", flight_no)
+            print(flight_no == "PK313")
+
+            value = cur.execute("SELECT departure_time from flights where airline_name = %s and flight_number = %s", (airline, flight_no))
+            if value > 0:
+                details = cur.fetchone()
+                mysql.connection.commit()
+                departure_time = details[0]
+                print("departure time:", departure_time)
+                
+                time_now = datetime.datetime.now()
+                value = cur.execute("SELECT timediff(%s, %s)", (departure_time, time_now))
+                if value >0:
+                    hour_diff = cur.fetchone()
+                    mysql.connection.commit()
+                    hour_diff = hour_diff[0]
+                    if value > 0 :
+                        check2 = datetime.timedelta(hours=48)
+                        if hour_diff > check2: #check if more than 48 hours till flight. if not, can not cancel flight
+                            ### CALL DELETE BOOKINGS FOR ALL BOOKINGS FOR THE FLIGHT NUMBER ###
+                            cur.execute("DELETE from bookings where flight_number =%s", (flight_no,))
+                            mysql.connection.commit()
+                            cur.execute("DELETE from flights where flight_number = %s and departure_time=%s", (flight_no, departure_time)) #casacding effect?!?!?
+                            mysql.connection.commit()
+                            cur.close()
+                            return render_template("agents.html", fname=session['fname'], lname=session['lname'], message="FLIGHT CANCELLED SUCCCESSFULLY!")
+                        else:
+                            return render_template("agents.html",fname=session['fname'], lname=session['lname'], message="YOU CANNOT CANCEL A FLIGHT WITHIN 48 HOURS")
+                    else:
+                        return "error in getting time difference"
+                else:
+                    return "TIME DIFF ERROR"
+            else:
+                return render_template("agents.html", fname=session['fname'], lname=session['lname'], message="FLIGHT NOT FOUND")
+        else:
+            return render_template("agents.html", fname=session['fname'], lname=session['lname'], message="invaid agent for this task")
+    else:
+        return render_template("cancelFlight.html", form=form)
+
+@app.route('/cancelBooking',methods=['POST', 'GET'])
+def cancelBooking():
+    form = forms.cancelBooking()
+    if form.validate_on_submit():
+        booking_id = form.booking_id.data
+        flight_no = form.flight_number.data
+
+        cur = mysql.connection.cursor()
+        result = cur.execute("DELETE from bookings where booking_id=%s and flight_number=%s and customer_id = %s", (booking_id, flight_no, session["userid"]))
+        mysql.connection.commit()
+        cur.close()
+        if result > 0:
+            return render_template("customer.html", fname=session['fname'], lname=session['lname'], message="YOUR BOOKING HAS BEEN REMOVED")
+        else:
+            return render_template("customer.html", fname=session['fname'], lname=session['lname'], message="ERROR: COULD NOT REMOVE BOOKING")
+    else:
+        return render_template("cancelBooking.html", form=form)
+
+@app.route('/addFlight',methods = ['GET','POST'])
+def addFlight():
+    form = forms.addFlight()
+    if form.validate_on_submit():
+        flight_no = form.flight_number.data
+        departure = form.departure.data
+        arrival = form.arrival.data
+        departure_time = form.departure_time.data
+        arrival_time = form.arrival_time.data
+        plane = form.plane_type.data
+        status = form.status.data
+        econ_price = form.economy_price.data
+        buis_price = form.buisness_price.data
+        first_price = form.first_class_price.data
+        airline_name = session['airline_name']
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO flights(flight_number,departure,arrival, departure_time, arrival_time,airline_name,plane_type,status) VALUES (%s, %s, %s,%s, %s, %s, %s, %s)",
+            (flight_no,departure,arrival,departure_time,arrival_time,airline_name,plane,status))
+        cur.execute("INSERT INTO `flight price`(flight_number,travel_class,price) VALUES (%s,%s,%s)", (flight_no,'Economy',econ_price))
+        cur.execute("INSERT INTO `flight price`(flight_number,travel_class,price) VALUES (%s,%s,%s)", (flight_no,'Buisness',buis_price))
+        cur.execute("INSERT INTO `flight price`(flight_number,travel_class,price) VALUES (%s,%s,%s)", (flight_no,'First-Class',first_price))
+        mysql.connection.commit()
+        cur.close()
+        return render_template("agents.html" ,fname= session['fname'], lname=session['lname'], airlinen = session['airline_name'], message = 'Flight Successfully Added')
+    else:
+        return render_template('addFlight.html',form= form)
+
+@app.route('/updateFlight', methods = ['GET','POST'])
+def updateFlight():
+    form = forms.updateFlight()
+    if form.validate_on_submit():
+        flight_no = form.flight_number.data
+        departure_time = form.departure_time.data
+        arrival_time = form.arrival_time.data
+        status = form.status.data
+        econ_price = form.economy_price.data
+        buis_price = form.buisness_price.data
+        first_price = form.first_class_price.data
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE flights set departure_time = %s, arrival_time = %s, status = %s where flight_number=%s", (departure_time,arrival_time,status,flight_no))
+        cur.execute("UPDATE `flight price` set price = %s where flight_number=%s and travel_class = %s", (econ_price,flight_no,'Economy'))
+        cur.execute("UPDATE `flight price` set price = %s where flight_number=%s and travel_class = %s", (buis_price,flight_no,'Buisness'))
+        cur.execute("UPDATE `flight price` set price = %s where flight_number=%s and travel_class = %s", (first_price,flight_no,'First-Class'))
+        mysql.connection.commit()
+        cur.close()
+        return render_template("agents.html" ,fname= session['fname'], lname=session['lname'], airlinen = session['airline_name'], message = 'Flight Successfully Updated')
+    else:
+        return render_template('updateFlight.html',form= form)
+
 if __name__ == '__main__':
     app.run(debug = True)
+
+
+# @app.route('/history', methods = ['GET', 'POST'])
+# def history():
+#     cur = mysql.connection.cursor()
+#     value = cur.execute('SELECT distinct(Booking_ID), distinct(flight_no) from Bookings WHERE Customer_ID = %s ',(session['userid']))
+#     if value > 0:
+#         detail = cur.fetchall()
 

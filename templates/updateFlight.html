@@ -1,0 +1,111 @@
+{% extends "agentBase.html" %}
+
+{% block title %}
+Update Flight 
+{% endblock %}
+
+{% block heading %}
+Update Flight
+{% endblock %}
+
+
+{% block content %}
+
+{% if message %}
+   <h3> {{ message }}</h3>
+{% endif %}
+
+{% if form %}
+<form action="{{url_for('updateFlight')}}" class="form-inline" method="POST" style="padding:5px;">
+    <!-- Full Name Field -->
+    <div class="required">
+    {{ form.flight_number.label }}: <br>
+    {{ form.flight_number }}
+    </div>
+    <br>
+    {% if form.flight_number.errors %}
+        {% for error in form.flight_number.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.departure_time.label }}: <br>
+    {{ form.departure_time }}
+    </div>
+    <br>
+    {% if form.departure_time.errors %}
+        {% for error in form.departure_time.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.arrival_time.label }}: <br>
+    {{ form.arrival_time }}
+    </div>
+    <br>
+    {% if form.arrival_time.errors %}
+        {% for error in form.arrival_time.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.status.label }}: <br>
+    {{ form.status }}
+    </div>
+    <br>
+    {% if form.status.errors %}
+        {% for error in form.status.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.economy_price.label }}: <br>
+    {{ form.economy_price}}
+    </div>
+    <br>
+    {% if form.economy_price.errors %}
+        {% for error in form.economy_price.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.buisness_price.label }}: <br>
+    {{ form.buisness_price }}
+    </div>
+    <br>
+    {% if form.buisness_price.errors %}
+        {% for error in form.buisness_price.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.first_class_price.label }}: <br>
+    {{ form.first_class_price }}
+    </div>
+    <br>
+    {% if form.first_class_price.errors %}
+        {% for error in form.first_class_price.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="submit">
+    {{ form.csrf_token }}
+    {{ form.submit }}
+    </div>
+</form> 
+{% endif %}
+{% endblock %}

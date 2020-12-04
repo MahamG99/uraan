@@ -1,0 +1,40 @@
+{% extends "LoggedInBase.html" %}
+
+
+
+{% block heading %}
+<h1>Booking Flight, {{session['flight']}} </h1>
+{% endblock %}
+
+{% block content %}
+{% if message %}
+    {{ message }}
+{% endif %}
+
+<table>
+    <tr>
+        <th>Passenger Name</th>  
+        <th>Booking ID</th>
+        <th>Flight Number</th>
+        <th>Passport Number</th>
+        <th>Gender</th>
+        <th>Nationality</th>
+        <th>Age</th>
+    </tr>
+    {% for people in session['booking'] %}
+    <tr>
+        <td>{{ people['name'] }}</td>
+        <td>{{ session['booking_id'] }}</td>
+        <td>{{ people['flight_no'] }}</td>
+        <td>{{ people['passport_number'] }}</td>
+        <td>{{ people['gender'] }}</td>
+        <td>{{ people['nationality'] }}</td>
+        <td>{{ people['age'] }}</td>
+        
+    </tr>
+    {% endfor %}
+    </table>
+    <br>
+    <a href="{{url_for('confirmbooking')}}" class="press press2">Confirm</a>
+
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "LoggedInBase.html" %}
+
+{% block heading %}
+<h1>Check Flight Details for Desired Flight, {{session['fname']}} {{session['lname']}}</h1>
+{% endblock %}
+
+{% block content %}
+
+
+{% if form %}
+<form action="{{url_for('flightstatus')}}" method="POST" style="padding:5px;">
+<div class = "form_basic">
+    <!-- FlightNo Field -->
+    <div class="form_basic">
+    {{ form.flight_no.label }}: <br>
+    {{ form.flight_no }}
+</div>
+    <br>
+    {% if form.flight_no.errors %}
+        {% for error in form.flight.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="submit">
+    {{ form.csrf_token }}
+    {{ form.submit }}
+    </div>
+</div>
+</form> 
+{% endif %}
+
+{% if message %}
+    <h3>{{ message }}</h3>
+{% endif %}
+
+{% if display %}
+
+<h2>Flight Status</h2>
+<br><br>
+<h3>{{display[7]}}</h3>
+<br><br><br>
+
+<h2>Flight details</h2>
+<table>
+<tr>
+    <th></th>
+    <th>Airline Name</th>  
+    <th>Flight Number</th>
+    <th>Departure</th>
+    <th>Arrival</th>
+    <th>Departure Time</th>
+    <th>Arrival Time</th>
+    <th>Plane Type</th>
+</tr>
+<tr>
+    <td> <img src= "{{url_for('static', filename=display[5]|string+".png" )}}" height="100" ></td>
+    <td>{{display[5]}}</td>
+    <td>{{display[0]}}</td>
+    <td>{{display[1]}}</td>
+    <td>{{display[2]}}</td>
+    <td>{{display[3]}}</td>
+    <td>{{display[4]}}</td>
+    <td>{{display[6]}}</td>
+</tr>
+</table>
+{% endif %}
+
+{% endblock %}

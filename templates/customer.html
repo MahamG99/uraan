@@ -5,7 +5,7 @@ Uraan
 {% endblock %}
 
 {% block heading %}
-<h1>Welcome, {{fname}} {{lname}}</h1>
+<h1>Welcome, {{ session['fname'] }} {{ session['lname'] }}</h1>
 {% endblock %}
 
 {% block content %}
@@ -37,9 +37,11 @@ Uraan
 <br><br><br>
 <input class="button" type="button" onclick="location.href='/onlineCheckIn';" value="Online CheckIn" /></button>
 <br><br><br>
-<input class="button" type="button" onclick="location.href='/';" value="Flight Status" /></button>
+<input class="button" type="button" onclick="location.href='/flightstatus';" value="Flight Status" /></button>
 <br><br><br>
 <input class="button" type="button" onclick="location.href='/';" value="Check Points" /></button>
+<br><br><br>
+<input class="button" type="button" onclick="location.href='/onlinePayment';" value="Online Payment" /></button>
 
 
 {% endblock %}

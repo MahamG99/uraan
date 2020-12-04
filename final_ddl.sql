@@ -94,7 +94,7 @@ CREATE TABLE `Flight Price` (
   `Passenger_type` varchar(10) NOT NULL,
   `Price` int NOT NULL,
   PRIMARY KEY (`Flight_Number`,`Travel_class`,`Passenger_type`),
-  CONSTRAINT `Flight Price_fk0` FOREIGN KEY (`Flight_Number`) REFERENCES `Flights` (`Flight_Number`)
+  CONSTRAINT `Flight Price_fk0` FOREIGN KEY (`Flight_Number`) REFERENCES `Flights` (`Flight_Number`) ON DELETE CASCADE
 )
 
 CREATE TABLE `Flights` (
