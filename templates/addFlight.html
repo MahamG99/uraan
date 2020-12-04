@@ -1,0 +1,149 @@
+{% extends "agentBase.html" %}
+
+{% block title %}
+Add Flight 
+{% endblock %}
+
+{% block heading %}
+Add Flight
+{% endblock %}
+
+
+{% block content %}
+
+{% if message %}
+   <h3> {{ message }}</h3>
+{% endif %}
+
+{% if form %}
+<form action="{{url_for('addFlight')}}" class="form-inline" method="POST" style="padding:5px;">
+    <!-- Full Name Field -->
+    <div class="required">
+    {{ form.flight_number.label }}: <br>
+    {{ form.flight_number }}
+    </div>
+    <br>
+    {% if form.flight_number.errors %}
+        {% for error in form.flight_number.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.departure.label }}: <br>
+    {{ form.departure }}
+    </div>
+
+    <br>
+    {% if form.departure.errors %}
+        {% for error in form.departure.errors %}
+        <b style="color:tomato;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Password Field -->
+    <div class="required">
+    {{ form.arrival.label }}: <br>
+    {{ form.arrival }}
+    </div>
+    <br>
+    {% if form.arrival.errors %}
+        {% for error in form.arrival.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.departure_time.label }}: <br>
+    {{ form.departure_time }}
+    </div>
+    <br>
+    {% if form.departure_time.errors %}
+        {% for error in form.departure_time.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.arrival_time.label }}: <br>
+    {{ form.arrival_time }}
+    </div>
+    <br>
+    {% if form.arrival_time.errors %}
+        {% for error in form.arrival_time.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.plane_type.label }}: <br>
+    {{ form.plane_type }}
+    </div>
+    <br>
+    {% if form.plane_type.errors %}
+        {% for error in form.plane_type.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.status.label }}: <br>
+    {{ form.status }}
+    </div>
+    <br>
+    {% if form.status.errors %}
+        {% for error in form.status.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.economy_price.label }}: <br>
+    {{ form.economy_price}}
+    </div>
+    <br>
+    {% if form.economy_price.errors %}
+        {% for error in form.economy_price.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.buisness_price.label }}: <br>
+    {{ form.buisness_price }}
+    </div>
+    <br>
+    {% if form.buisness_price.errors %}
+        {% for error in form.buisness_price.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="required">
+    {{ form.first_class_price.label }}: <br>
+    {{ form.first_class_price }}
+    </div>
+    <br>
+    {% if form.first_class_price.errors %}
+        {% for error in form.first_class_price.errors %}
+        <b style="color:white;"> {{ error }} </b> 
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    <div class="submit">
+    {{ form.csrf_token }}
+    {{ form.submit }}
+    </div>
+</form> 
+{% endif %}
+{% endblock %}

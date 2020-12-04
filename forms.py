@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
-from wtforms import StringField, PasswordField, SubmitField, SelectField, SelectMultipleField, IntegerField, DateField, FieldList, FormField
-from wtforms.validators import InputRequired, Email, EqualTo, Length
+from wtforms import StringField, PasswordField, SubmitField, SelectField, SelectMultipleField, IntegerField, DateField, FieldList, FormField, DateTimeField
+from wtforms.validators import InputRequired, Email, EqualTo, Length, NumberRange
 from flask_admin.form.widgets import DatePickerWidget
 import csv
 cities = []
@@ -41,7 +41,7 @@ class LoginForm(FlaskForm):
 class SearchFlightsForm(FlaskForm):
     dep = SelectField('Departure',choices = cities,validators = [InputRequired(message = 'Please select an option')])
     arr = SelectField('Arrival',choices = cities,validators = [InputRequired(message = 'Please select an option')] )
-    dep_time= DateField('Departure Date',widget=DatePickerWidget(), validators = [InputRequired(message = 'Please select a date')])
+    dep_time= DateField('Departure Date (YYYY-MM-DD)',widget=DatePickerWidget(), validators = [InputRequired(message = 'Please select a date')])
     # within = SelectField('')
     travel_class = SelectField('Class',choices = classes ,validators = [InputRequired(message = 'Please select an option')]  )
    
@@ -82,3 +82,41 @@ class BookFlightsForm(FlaskForm):
 
 # class TempForm(FlaskForm):
 #     passenger = FieldList(FormField(BookFlightsForm), min_entries=1 , max_entries=10)
+class FlightStatusForm(FlaskForm):
+    flight_no = StringField('Flight Number',validators = [InputRequired(message = 'Field cannot be empty')])
+    submit = SubmitField('Check Status')
+
+class cancelFlight(FlaskForm):
+    flight_number = StringField('Flight Number' , validators = [InputRequired(message = 'Field cannot be empty')])
+    departure = SelectField('Departure',choices = cities,validators = [InputRequired(message = 'Please select an option')])
+    arrival = SelectField('Arrival',choices = cities,validators = [InputRequired(message = 'Please select an option')] )
+    submit= SubmitField('Cancel Flight')
+
+class cancelBooking(FlaskForm):
+    booking_id = StringField('Booking ID' , validators = [InputRequired(message = 'Field cannot be empty')])
+    flight_number = StringField('Flight Number' , validators = [InputRequired(message = 'Field cannot be empty')])
+    # passenger_name = StringField('First Name', validators = [InputRequired(message = 'Field cannot be empty'), Length(max = 20)])
+    submit = SubmitField('Cancel Booking')
+
+class addFlight(FlaskForm):
+    flight_number = StringField('Flight Number' , validators = [InputRequired(message = 'Field cannot be empty')])
+    departure = SelectField('Departure',choices = cities,validators = [InputRequired(message = 'Please select an option')])
+    arrival = SelectField('Arrival',choices = cities,validators = [InputRequired(message = 'Please select an option')] )
+    departure_time = DateTimeField('Time Departure', format = '%Y-%m-%d %H:%M:%S',validators = [InputRequired(message = 'Field cannot be empty')])
+    arrival_time = DateTimeField('Time Arrival', format = '%Y-%m-%d %H:%M:%S',validators = [InputRequired(message = 'Field cannot be empty')])
+    plane_type = SelectField('Plane Type', choices = ['Air-Bus','Normal'],validators = [InputRequired(message = 'Please select an option')])
+    status = SelectField('Status', choices = ['On-time','Delayed','Cancelled'],validators = [InputRequired(message = 'Please select an option')])
+    economy_price = IntegerField('Economy Price', validators = [InputRequired(message = 'Field cannot be empty'),NumberRange(min = 0,message= 'Has to be Positive')])
+    buisness_price = IntegerField('Business Price', validators = [InputRequired(message = 'Field cannot be empty'),NumberRange(min = 0,message= 'Has to be Positive')])
+    first_class_price = IntegerField('First Class Price', validators = [InputRequired(message = 'Field cannot be empty'),NumberRange(min = 0,message= 'Has to be Positive')])
+    submit= SubmitField('Add Flight')
+
+class updateFlight(FlaskForm):
+    flight_number = StringField('Flight Number' , validators = [InputRequired(message = 'Field cannot be empty')])
+    departure_time = DateTimeField('Time Departure (YYYY-MM-DD HH:MM:SS)', format = '%Y-%m-%d %H:%M:%S',validators = [InputRequired(message = 'Field cannot be empty')])
+    arrival_time = DateTimeField('Time Arrival (YYYY-MM-DD HH:MM:SS)', format = '%Y-%m-%d %H:%M:%S',validators = [InputRequired(message = 'Field cannot be empty')])
+    status = SelectField('Status', choices = ['On-time','Delayed','Cancelled'],validators = [InputRequired(message = 'Please select an option')])
+    economy_price = IntegerField('Economy Price', validators = [InputRequired(message = 'Field cannot be empty'),NumberRange(min = 0,message= 'Has to be Positive')])
+    buisness_price = IntegerField('Business Price', validators = [InputRequired(message = 'Field cannot be empty'),NumberRange(min = 0,message= 'Has to be Positive')])
+    first_class_price = IntegerField('First Class Price', validators = [InputRequired(message = 'Field cannot be empty'),NumberRange(min = 0,message= 'Has to be Positive')])
+    submit= SubmitField('Update Flight')    

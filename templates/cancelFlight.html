@@ -1,11 +1,11 @@
-{% extends "LoggedInBase.html" %}
+{% extends "agentBase.html" %}
 
 {% block title %}
-Online Flight Payment
+Cancel Flight 
 {% endblock %}
 
 {% block heading %}
-Online Flight Payment
+Cancel Flight
 {% endblock %}
 
 
@@ -16,28 +16,28 @@ Online Flight Payment
 {% endif %}
 
 {% if form %}
-<form action="{{url_for('onlinePayment')}}" class="form-inline" method="POST" style="padding:5px;">
+<form action="{{url_for('cancelFlight')}}" class="form-inline" method="POST" style="padding:5px;">
     <!-- Full Name Field -->
     <div class="required">
-    {{ form.booking_id.label }}: <br>
-    {{ form.booking_id }}
+    {{ form.flight_number.label }}: <br>
+    {{ form.flight_number }}
     </div>
     <br>
-    {% if form.booking_id.errors %}
-        {% for error in form.booking_id.errors %}
+    {% if form.flight_number.errors %}
+        {% for error in form.flight_number.errors %}
         <b style="color:tomato;"> {{ error }} </b> 
         <br>
         {% endfor %}
     {% endif %}
 
     <div class="required">
-    {{ form.account_no.label }}: <br>
-    {{ form.account_no }}
+    {{ form.departure.label }}: <br>
+    {{ form.departure }}
     </div>
 
     <br>
-    {% if form.account_no.errors %}
-        {% for error in form.account_no.errors %}
+    {% if form.departure.errors %}
+        {% for error in form.departure.errors %}
         <b style="color:tomato;"> {{ error }} </b> 
         <br>
         {% endfor %}
@@ -45,13 +45,13 @@ Online Flight Payment
 
     <!-- Password Field -->
     <div class="required">
-    {{ form.security_key.label }}: <br>
-    {{ form.security_key }}
+    {{ form.arrival.label }}: <br>
+    {{ form.arrival }}
     </div>
     <br>
-    {% if form.security_key.errors %}
-        {% for error in form.security_key.errors %}
-        <b style="color:tomato;"> {{ error }} </b> 
+    {% if form.arrival.errors %}
+        {% for error in form.arrival.errors %}
+        <b style="color:white;"> {{ error }} </b> 
         <br>
         {% endfor %}
     {% endif %}

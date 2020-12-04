@@ -1,9 +1,30 @@
-{% extends "LoggedInBase.html" %}
+{% extends "agentBase.html" %}
 
 {% block title %}
 Uraan
 {% endblock %}
 
 {% block heading %}
-<h1>Welcome,  {{fname}} {{lname}}</h1>
+<h1>Welcome,  {{fname}} {{lname}} from {{airlinen}}</h1>
+{% endblock %}
+
+
+{% block content %}
+{% if message %}
+    {{ message }}
+{% endif %}
+<br><br>
+
+<input class="button" type="button" onclick="location.href='/addFlight';" value="Add Flight" /></button>
+<br><br><br>
+<input class="button" type="button" onclick="location.href='/updateFlight';" value="Update Flight" /></button>
+<br><br><br>
+<input class="button" type="button" onclick="location.href='/cancelFlight';" value="Cancel Flight" /></button>
+<br><br><br>
+<input class="button" type="button" onclick="location.href='/';" value="Customer/Specific Flight Booking Information" /></button>
+<br><br><br>
+<input class="button" type="button" onclick="location.href='/';" value="Observe Booking Trends" /></button>
+<br><br><br>
+
+
 {% endblock %}
